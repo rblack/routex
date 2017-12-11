@@ -32,8 +32,8 @@ defmodule Routex.UDPServer do
   def send_resp({:udp, socket, ip, fromport, packet}) do
     start_t = System.monotonic_time(:microsecond)
     resp = Routex.DNS.make_resp(packet)
-    :gen_udp.send(socket, ip, fromport, resp)
     end_t = System.monotonic_time(:microsecond)
+    :gen_udp.send(socket, ip, fromport, resp)
     Logger.info("Response time #{end_t - start_t}μs")
   end
 

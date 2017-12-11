@@ -14,7 +14,7 @@ defmodule Routex.TCPServer do
     {:ok, client} = :gen_tcp.accept(socket)
     {:ok, pid} = Task.Supervisor.start_child(Routex.ConnSupervisor, fn -> send_resp(client) end)
     case :gen_tcp.controlling_process(client, pid) do
-      :ok -> Logger.info("Ctrl proc ok")
+      :ok -> Logger.debug("Ctrl proc ok")
       {:error, :badarg} -> Logger.warn("Ctrl proc bad arg")
     end
     accept_loop(socket)
@@ -25,8 +25,8 @@ defmodule Routex.TCPServer do
     start_t = System.monotonic_time(:microsecond)
     {:ok, packet} = :gen_tcp.recv(socket, 0)
     resp = Routex.DNS.make_resp(packet)
-    :gen_tcp.send(socket, resp)
     end_t = System.monotonic_time(:microsecond)
+    :gen_tcp.send(socket, resp)
     Logger.info("Response time #{end_t - start_t}μs")
   end
 
